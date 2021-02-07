@@ -24,12 +24,32 @@ func setAppAddress() {
 			log.Println("[APP_PORT]: Value Not Set. Setting it to Default (5000)")
 			AppAddress = config.AppHost + ":5000"
 		}
+	} else {
+		AppAddress = config.AppHost + ":" + config.AppPort
+	}
+}
+
+func checkDBNameCollection() {
+	if config.DbName == "" || config.DbCollection == "" {
+		if config.DbName == "" {
+			log.Println("[DB_NAME]: Value Not Set")
+		}
+		if config.DbCollection == "" {
+			log.Println("[DB_COLLECTION]: Value Not Set")
+		}
+		log.Fatal("Set Above Environmental Variable's Value First")
 	}
 }
 
 func main() {
 	setAppAddress()
+	checkDBNameCollection()
+
 	log.Println("Server Running on : ", AppAddress)
+
+	// API Endpoints
 	config.Router.HandleFunc("/", apis.HomeHandler)
+	config.Router.HandleFunc("/api/book/create", apis.CreateBookEndpoint).Methods("POST")
+
 	_ = http.ListenAndServe(AppAddress, config.Router)
 }
