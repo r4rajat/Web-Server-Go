@@ -26,3 +26,54 @@ export DB_COLLECTION="books"
 ```shell
 go run app.go
 ```
+
+----
+##API Documentation
+
+###Get All Books [GET]
+```api
+Endpoint: /api/books/view
+```
+
+###Get Book with ID [GET]
+```api
+Endpoint: /api/book/view
+Params: _id
+```
+
+###Create a New Book [POST]
+```api
+Endpoint: /api/book/create
+Body:-
+{
+    "name": "Book 1",
+    "isbn": 67535487,
+    "publisher": "Pelican",
+    "author":{
+        "first_name": "Rajat",
+        "last_name": "Gupta"
+    }
+}
+```
+
+###Update Book Parameters [PATCH]
+```api
+Endpoint: /api/book/update
+Params: _id
+Body: Use only required to update
+{
+    "name": "Book x",
+    "isbn": 11111,
+    "publisher": "aaaaa",
+    "author":{
+        "first_name": "xxxxx",
+        "last_name": "yyyyy"
+    }
+}
+```
+
+###Delete Book with ID [DELETE]
+```api
+Endpoint: /api/book/delete
+Params: _id
+```
