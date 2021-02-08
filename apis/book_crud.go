@@ -63,6 +63,7 @@ func GetBooksEndpoint(response http.ResponseWriter, _ *http.Request) {
 		_, _ = response.Write(payload)
 		return
 	}
+	cursor.Close(config.Ctx)
 	j.Set("data", books)
 	payload, err := j.MarshalJSON()
 	if err != nil {
@@ -86,11 +87,71 @@ func GetBookDetailsEndpoint(response http.ResponseWriter, request *http.Request)
 		j.Set("error_message", err.Error())
 		payload, err := j.MarshalJSON()
 		if err != nil {
-			_, _ = response.Write(payload)
+			return
 		}
+		_, _ = response.Write(payload)
 		return
 	}
 	j.Set("data", book)
+	payload, err := j.MarshalJSON()
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		j.Set("error_message", err.Error())
+	}
+	_, _ = response.Write(payload)
+}
+
+func UpdateBookDetailsEndpoint(response http.ResponseWriter, request *http.Request) {
+	response.Header().Add("Content-Type", "application/json")
+	var book config.Book
+	_ = json.NewDecoder(request.Body).Decode(&book)
+	newData := bson.M{
+		"$set": book,
+	}
+	params := mux.Vars(request)
+	id, _ := primitive.ObjectIDFromHex(params["_id"])
+	j := simplejson.New()
+	client := config.GetMongoDBDriver()
+	collection := client.Database(config.DbName).Collection(config.DbCollection)
+	_, err := collection.UpdateOne(config.Ctx, config.Book{ID: id}, newData)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		j.Set("error_message", err.Error())
+		payload, err := j.MarshalJSON()
+		if err != nil {
+			return
+		}
+		_, _ = response.Write(payload)
+		return
+	}
+	j.Set("message", "Values Updated")
+	payload, err := j.MarshalJSON()
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		j.Set("error_message", err.Error())
+	}
+	_, _ = response.Write(payload)
+}
+
+func DeleteBookEndpoint(response http.ResponseWriter, request *http.Request) {
+	response.Header().Add("Content-Type", "application/json")
+	params := mux.Vars(request)
+	id, _ := primitive.ObjectIDFromHex(params["_id"])
+	j := simplejson.New()
+	client := config.GetMongoDBDriver()
+	collection := client.Database(config.DbName).Collection(config.DbCollection)
+	_, err := collection.DeleteOne(config.Ctx, config.Book{ID: id})
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		j.Set("error_message", err.Error())
+		payload, err := j.MarshalJSON()
+		if err != nil {
+			return
+		}
+		_, _ = response.Write(payload)
+		return
+	}
+	j.Set("message", "Book with ID "+params["_id"]+"deleted")
 	payload, err := j.MarshalJSON()
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)

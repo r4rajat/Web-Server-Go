@@ -48,9 +48,11 @@ func main() {
 	log.Println("Server Running on : ", AppAddress)
 
 	// API Endpoints
-	config.Router.HandleFunc("/", apis.HomeHandler)
+	config.Router.HandleFunc("/", apis.HomeHandler).Methods("GET")
 	config.Router.HandleFunc("/api/book/create", apis.CreateBookEndpoint).Methods("POST")
 	config.Router.HandleFunc("/api/books/view", apis.GetBooksEndpoint).Methods("GET")
-	config.Router.HandleFunc("/api/book/view", apis.GetBookDetailsEndpoint)
+	config.Router.HandleFunc("/api/book/view", apis.GetBookDetailsEndpoint).Methods("GET")
+	config.Router.HandleFunc("/api/book/update", apis.UpdateBookDetailsEndpoint).Methods("PATCH")
+	config.Router.HandleFunc("/api/book/delete", apis.DeleteBookEndpoint).Methods("DELETE")
 	_ = http.ListenAndServe(AppAddress, config.Router)
 }
