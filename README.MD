@@ -37,8 +37,7 @@ Endpoint: /api/books/view
 
 ###Get Book with ID [GET]
 ```api
-Endpoint: /api/book/view
-Params: _id
+Endpoint: /api/book/view/{_id}
 ```
 
 ###Create a New Book [POST]
@@ -58,8 +57,7 @@ Body:-
 
 ###Update Book Parameters [PATCH]
 ```api
-Endpoint: /api/book/update
-Params: _id
+Endpoint: /api/book/update/{_id}
 Body: Use only required to update
 {
     "name": "Book x",
@@ -74,6 +72,5 @@ Body: Use only required to update
 
 ###Delete Book with ID [DELETE]
 ```api
-Endpoint: /api/book/delete
-Params: _id
+Endpoint: /api/book/delete/{_id}
 ```
