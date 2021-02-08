@@ -4,7 +4,9 @@ import (
 	"Web-Server-Go/config"
 	"encoding/json"
 	"github.com/bitly/go-simplejson"
+	"github.com/gorilla/mux"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
 	"net/http"
 )
@@ -40,8 +42,9 @@ func GetBooksEndpoint(response http.ResponseWriter, _ *http.Request) {
 		j.Set("error_message", err.Error())
 		payload, err := j.MarshalJSON()
 		if err != nil {
-			_, _ = response.Write(payload)
+			return
 		}
+		_, _ = response.Write(payload)
 		return
 	}
 	defer cursor.Close(config.Ctx)
@@ -55,11 +58,39 @@ func GetBooksEndpoint(response http.ResponseWriter, _ *http.Request) {
 		j.Set("error_message", err.Error())
 		payload, err := j.MarshalJSON()
 		if err != nil {
+			return
+		}
+		_, _ = response.Write(payload)
+		return
+	}
+	j.Set("data", books)
+	payload, err := j.MarshalJSON()
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		j.Set("error_message", err.Error())
+	}
+	_, _ = response.Write(payload)
+}
+
+func GetBookDetailsEndpoint(response http.ResponseWriter, request *http.Request) {
+	response.Header().Add("Content-Type", "application/json")
+	params := mux.Vars(request)
+	id, _ := primitive.ObjectIDFromHex(params["_id"])
+	var book config.Book
+	j := simplejson.New()
+	client := config.GetMongoDBDriver()
+	collection := client.Database(config.DbName).Collection(config.DbCollection)
+	err := collection.FindOne(config.Ctx, config.Book{ID: id}).Decode(&book)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		j.Set("error_message", err.Error())
+		payload, err := j.MarshalJSON()
+		if err != nil {
 			_, _ = response.Write(payload)
 		}
 		return
 	}
-	j.Set("data", books)
+	j.Set("data", book)
 	payload, err := j.MarshalJSON()
 	if err != nil {
 		response.WriteHeader(http.StatusInternalServerError)

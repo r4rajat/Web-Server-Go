@@ -51,5 +51,6 @@ func main() {
 	config.Router.HandleFunc("/", apis.HomeHandler)
 	config.Router.HandleFunc("/api/book/create", apis.CreateBookEndpoint).Methods("POST")
 	config.Router.HandleFunc("/api/books/view", apis.GetBooksEndpoint).Methods("GET")
+	config.Router.HandleFunc("/api/book/view", apis.GetBookDetailsEndpoint)
 	_ = http.ListenAndServe(AppAddress, config.Router)
 }

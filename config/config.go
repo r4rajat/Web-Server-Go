@@ -14,10 +14,10 @@ import (
 // Models
 type Book struct {
 	ID        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Name      string             `json:"name" bson:"name"`
-	ISBN      int                `json:"isbn" bson:"isbn"`
-	Publisher string             `json:"publisher" bson:"publisher"`
-	Author    *Author            `json:"author" bson:"author"`
+	Name      string             `json:"name,omitempty" bson:"name,omitempty"`
+	ISBN      int                `json:"isbn,omitempty" bson:"isbn,omitempty"`
+	Publisher string             `json:"publisher,omitempty" bson:"publisher,omitempty"`
+	Author    *Author            `json:"author,omitempty" bson:"author,omitempty"`
 }
 type Author struct {
 	FirstName string `json:"first_name"`
