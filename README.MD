@@ -4,43 +4,43 @@
 
 ---
 
-###Step 1: Install the Requirements for the Project
+### Step 1: Install the Requirements for the Project
 ```shell
-cat reqiurements.txt | xargs go get
+$ cat reqiurements.txt | xargs go get
 ```
 
-###Step 2: Set Environmental Variables
+### Step 2: Set Environmental Variables
 ```shell
 ------ OPTIONAL ------
-export APP_HOST=0.0.0.0
-export APP_PORT=5000
-export DB_HOST=0.0.0.0
-export DB_PORT=27017
+$ export APP_HOST=0.0.0.0
+$ export APP_PORT=5000
+$ export DB_HOST=0.0.0.0
+$ export DB_PORT=27017
 
 ------ MANDATORY ------
-export DB_NAME="mylibrary"
-export DB_COLLECTION="books"
+$ export DB_NAME="mylibrary"
+$ export DB_COLLECTION="books"
 ```
 
-###Step 3: Run the Mux Server
+### Step 3: Run the Mux Server
 ```shell
-go run app.go
+$ go run app.go
 ```
 
 ----
-##API Documentation
+## API Documentation
 
-###Get All Books [GET]
+### Get All Books [GET]
 ```api
 Endpoint: /api/books/view
 ```
 
-###Get Book with ID [GET]
+### Get Book with ID [GET]
 ```api
 Endpoint: /api/book/view/{_id}
 ```
 
-###Create a New Book [POST]
+### Create a New Book [POST]
 ```api
 Endpoint: /api/book/create
 Body:-
@@ -55,7 +55,7 @@ Body:-
 }
 ```
 
-###Update Book Parameters [PATCH]
+### Update Book Parameters [PATCH]
 ```api
 Endpoint: /api/book/update/{_id}
 Body: Use only required to update
@@ -70,7 +70,7 @@ Body: Use only required to update
 }
 ```
 
-###Delete Book with ID [DELETE]
+### Delete Book with ID [DELETE]
 ```api
 Endpoint: /api/book/delete/{_id}
 ```
